@@ -27,10 +27,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const noteRoutes = require('./api/note/note.routers')
-// const globalRoutes = require('./api/global/global.routers')
+const userRoutes = require('./api/user/user.routers')
 
 app.use('/api/note', noteRoutes)
-// app.use('/api/global', globalRoutes)
+app.use('/api/user', userRoutes)
 
 
 app.get('/**', (req, res) => {

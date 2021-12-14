@@ -5,12 +5,16 @@ module.exports = {
     getNotes,
     addNote,
     deleteNote,
+    editTxt,
+    deleteTodo,
+    doneTodo,
     changeColor
 }
 
 async function getNotes(req, res) {
+    const type = req.params.filterBy
     try {
-        const notes = await noteService.getNotes()
+        const notes = await noteService.getNotes(type)
         res.status(200).send(notes)
 
     } catch (err) {
@@ -19,17 +23,16 @@ async function getNotes(req, res) {
     }
 }
 
-async function changeColor(req,res){
-    const bgc = req.body
-    console.log(req.params.id,bgc);
-    try{
-        await noteService.changeColor(req.params.id,)
-    }catch(err){
+async function editTxt(req, res) {
+    const info = req.body
+    try {
+        await noteService.editTxt(req.params.id, info)
+    } catch (err) {
         console.log(err);
     }
 }
 async function deleteNote(req, res) {
-   
+
     try {
         await noteService.removeNote(req.params.id)
         res.send({ msg: 'Deleted successfully' })
@@ -40,9 +43,45 @@ async function deleteNote(req, res) {
     }
 }
 
+async function deleteTodo(req, res) {
+    const noteId = req.params.id
+    const info = req.body
+    try {
+        await noteService.removeTodo(noteId, info)
+        res.send({ msg: 'Deleted successfully' })
+    } catch (err) {
+        logger.error('Failed to delete todo', err)
+        res.status(500).send({ err: 'Failed to delete todo' })
+
+    }
+}
+async function doneTodo(req, res) {
+    const noteId = req.params.id
+    const info = req.body
+    try {
+        await noteService.doneTodo(noteId, info)
+        res.send({ msg: 'Deleted successfully' })
+    } catch (err) {
+        logger.error('Failed to delete todo', err)
+        res.status(500).send({ err: 'Failed to delete todo' })
+
+    }
+}
+async function changeColor(req, res) {
+    const noteId = req.params.id
+    const style = req.body
+    try {
+        await noteService.changeColor(noteId, style)
+        res.send({ msg: 'change successfully' })
+    } catch (err) {
+        logger.error('Failed to change color', err)
+        res.status(500).send({ err: 'Failed to change color' })
+
+    }
+}
+
 async function addNote(req, res) {
     var note = req.body
-    console.log('note add', note);
     note = await noteService.addNote(note)
     res.send(note)
 
